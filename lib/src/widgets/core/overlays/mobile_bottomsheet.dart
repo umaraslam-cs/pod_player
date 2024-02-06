@@ -187,7 +187,7 @@ class _MobileOverlayBottomControlles extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const durationTextStyle = TextStyle(color: Colors.white70, fontSize: 12);
+    const durationTextStyle = TextStyle(color: Colors.white70, fontSize: 14);
     const itemColor = Colors.white;
 
     return GetBuilder<PodGetXVideoController>(
@@ -207,7 +207,7 @@ class _MobileOverlayBottomControlles extends StatelessWidget {
                     children: [
                       Text(
                         podCtr.calculateVideoDuration(podCtr.videoPosition),
-                        style: const TextStyle(color: itemColor, fontSize: 12),
+                        style: const TextStyle(color: itemColor, fontSize: 14),
                       ),
                       const Text(
                         ' / ',
