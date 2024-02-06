@@ -51,33 +51,33 @@ class _MobileOverlay extends StatelessWidget {
             ),
           ),
         ),
-        Align(
-          alignment: Alignment.topCenter,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Expanded(
-                child: IgnorePointer(
-                  child: podCtr.videoTitle ?? const SizedBox(),
-                ),
-              ),
-              MaterialIconButton(
-                toolTipMesg: podCtr.podPlayerLabels.settings,
-                color: itemColor,
-                onPressed: () {
-                  if (podCtr.isOverlayVisible) {
-                    _bottomSheet(context);
-                  } else {
-                    podCtr.toggleVideoOverlay();
-                  }
-                },
-                child: const Icon(
-                  Icons.more_vert_rounded,
-                ),
-              ),
-            ],
-          ),
-        ),
+        // Align(
+        //   alignment: Alignment.topCenter,
+        //   child: Row(
+        //     mainAxisAlignment: MainAxisAlignment.end,
+        //     children: [
+        //       Expanded(
+        //         child: IgnorePointer(
+        //           child: podCtr.videoTitle ?? const SizedBox(),
+        //         ),
+        //       ),
+        //       MaterialIconButton(
+        //         toolTipMesg: podCtr.podPlayerLabels.settings,
+        //         color: itemColor,
+        //         onPressed: () {
+        //           if (podCtr.isOverlayVisible) {
+        //             _bottomSheet(context);
+        //           } else {
+        //             podCtr.toggleVideoOverlay();
+        //           }
+        //         },
+        //         child: const Icon(
+        //           Icons.more_vert_rounded,
+        //         ),
+        //       ),
+        //     ],
+        //   ),
+        // ),
         Align(
           alignment: Alignment.bottomLeft,
           child: _MobileOverlayBottomControlles(tag: tag),
