@@ -172,7 +172,7 @@ class _PodVideoPlayerState extends State<PodVideoPlayer>
             const SizedBox(height: 20),
             Text(
               widget.podPlayerLabels.error,
-              style: const TextStyle(color: Colors.red),
+              style: const TextStyle(color: Colors.red, fontSize: 14),
             ),
           ],
         ),
