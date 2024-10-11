@@ -134,7 +134,6 @@ class _PodCoreVideoPlayer extends StatelessWidget {
                               : Align(
                                   alignment: Alignment.bottomCenter,
                                   child: PodProgressBar(
-                                    isFullScreen: podCtr.isFullScreen,
                                     tag: tag,
                                     alignment: Alignment.bottomCenter,
                                     podProgressBarConfig: podCtr.podProgressBarConfig,

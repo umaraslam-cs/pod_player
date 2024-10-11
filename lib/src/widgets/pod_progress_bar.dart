@@ -15,7 +15,6 @@ class PodProgressBar extends StatefulWidget {
     this.onDragStart,
     this.onDragEnd,
     this.onDragUpdate,
-    this.isFullScreen = false,
     this.alignment = Alignment.center,
   }) : podProgressBarConfig = podProgressBarConfig ?? const PodProgressBarConfig();
 
@@ -25,7 +24,6 @@ class PodProgressBar extends StatefulWidget {
   final void Function()? onDragUpdate;
   final Alignment alignment;
   final String tag;
-  final bool isFullScreen;
 
   @override
   State<PodProgressBar> createState() => _PodProgressBarState();
@@ -59,7 +57,7 @@ class _PodProgressBarState extends State<PodProgressBar> {
           builder: (context, size) {
             return GestureDetector(
               behavior: HitTestBehavior.opaque,
-              child: _progressBar(size, widget.isFullScreen),
+              child: _progressBar(size),
               onHorizontalDragStart: (DragStartDetails details) {
                 if (!videoPlayerValue!.isInitialized) {
                   return;
@@ -105,11 +103,11 @@ class _PodProgressBarState extends State<PodProgressBar> {
     );
   }
 
-  MouseRegion _progressBar(BoxConstraints size, bool isFullScreen) {
+  MouseRegion _progressBar(BoxConstraints size) {
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: Padding(
-        padding: isFullScreen ? const EdgeInsets.only(bottom: 20) : widget.podProgressBarConfig.padding,
+        padding: widget.podProgressBarConfig.padding,
         child: SizedBox(
           width: size.maxWidth,
           height: widget.podProgressBarConfig.circleHandlerRadius,
