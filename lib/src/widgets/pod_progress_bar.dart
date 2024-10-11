@@ -15,9 +15,9 @@ class PodProgressBar extends StatefulWidget {
     this.onDragStart,
     this.onDragEnd,
     this.onDragUpdate,
+    this.isFullScreen = false,
     this.alignment = Alignment.center,
-  }) : podProgressBarConfig =
-            podProgressBarConfig ?? const PodProgressBarConfig();
+  }) : podProgressBarConfig = podProgressBarConfig ?? const PodProgressBarConfig();
 
   final PodProgressBarConfig podProgressBarConfig;
   final void Function()? onDragStart;
@@ -25,6 +25,7 @@ class PodProgressBar extends StatefulWidget {
   final void Function()? onDragUpdate;
   final Alignment alignment;
   final String tag;
+  final bool isFullScreen;
 
   @override
   State<PodProgressBar> createState() => _PodProgressBarState();
@@ -40,8 +41,7 @@ class _PodProgressBarState extends State<PodProgressBar> {
     if (box != null) {
       final Offset tapPos = box.globalToLocal(globalPosition);
       final double relative = tapPos.dx / box.size.width;
-      final Duration position =
-          (videoPlayerValue?.duration ?? Duration.zero) * relative;
+      final Duration position = (videoPlayerValue?.duration ?? Duration.zero) * relative;
       _podCtr.seekTo(position);
     }
   }
@@ -59,13 +59,12 @@ class _PodProgressBarState extends State<PodProgressBar> {
           builder: (context, size) {
             return GestureDetector(
               behavior: HitTestBehavior.opaque,
-              child: _progressBar(size),
+              child: _progressBar(size, widget.isFullScreen),
               onHorizontalDragStart: (DragStartDetails details) {
                 if (!videoPlayerValue!.isInitialized) {
                   return;
                 }
-                _controllerWasPlaying =
-                    podCtr.videoCtr?.value.isPlaying ?? false;
+                _controllerWasPlaying = podCtr.videoCtr?.value.isPlaying ?? false;
                 if (_controllerWasPlaying) {
                   podCtr.videoCtr?.pause();
                 }
@@ -106,11 +105,11 @@ class _PodProgressBarState extends State<PodProgressBar> {
     );
   }
 
-  MouseRegion _progressBar(BoxConstraints size) {
+  MouseRegion _progressBar(BoxConstraints size, bool isFullScreen) {
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: Padding(
-        padding: widget.podProgressBarConfig.padding,
+        padding: isFullScreen ? const EdgeInsets.only(bottom: 20) : widget.podProgressBarConfig.padding,
         child: SizedBox(
           width: size.maxWidth,
           height: widget.podProgressBarConfig.circleHandlerRadius,
@@ -123,11 +122,10 @@ class _PodProgressBarState extends State<PodProgressBar> {
                 painter: _ProgressBarPainter(
                   videoPlayerValue!,
                   podProgressBarConfig: widget.podProgressBarConfig.copyWith(
-                    circleHandlerRadius: podCtr.isOverlayVisible ||
-                            widget
-                                .podProgressBarConfig.alwaysVisibleCircleHandler
-                        ? widget.podProgressBarConfig.circleHandlerRadius
-                        : 0,
+                    circleHandlerRadius:
+                        podCtr.isOverlayVisible || widget.podProgressBarConfig.alwaysVisibleCircleHandler
+                            ? widget.podProgressBarConfig.circleHandlerRadius
+                            : 0,
                   ),
                 ),
                 size: Size(
@@ -159,17 +157,15 @@ class _ProgressBarPainter extends CustomPainter {
     final double height = podProgressBarConfig!.height;
     final double width = size.width;
     final double curveRadius = podProgressBarConfig!.curveRadius;
-    final double circleHandlerRadius =
-        podProgressBarConfig!.circleHandlerRadius;
-    final Paint backgroundPaint =
-        podProgressBarConfig!.getBackgroundPaint != null
-            ? podProgressBarConfig!.getBackgroundPaint!(
-                width: width,
-                height: height,
-                circleHandlerRadius: circleHandlerRadius,
-              )
-            : Paint()
-          ..color = podProgressBarConfig!.backgroundColor;
+    final double circleHandlerRadius = podProgressBarConfig!.circleHandlerRadius;
+    final Paint backgroundPaint = podProgressBarConfig!.getBackgroundPaint != null
+        ? podProgressBarConfig!.getBackgroundPaint!(
+            width: width,
+            height: height,
+            circleHandlerRadius: circleHandlerRadius,
+          )
+        : Paint()
+      ..color = podProgressBarConfig!.backgroundColor;
 
     canvas.drawRRect(
       RRect.fromRectAndRadius(
@@ -185,10 +181,8 @@ class _ProgressBarPainter extends CustomPainter {
       return;
     }
 
-    final double playedPartPercent =
-        value.position.inMilliseconds / value.duration.inMilliseconds;
-    final double playedPart =
-        playedPartPercent > 1 ? width : playedPartPercent * width;
+    final double playedPartPercent = value.position.inMilliseconds / value.duration.inMilliseconds;
+    final double playedPart = playedPartPercent > 1 ? width : playedPartPercent * width;
 
     for (final DurationRange range in value.buffered) {
       final double start = range.startFraction(value.duration) * width;
@@ -238,16 +232,15 @@ class _ProgressBarPainter extends CustomPainter {
       playedPaint,
     );
 
-    final Paint handlePaint =
-        podProgressBarConfig!.getCircleHandlerPaint != null
-            ? podProgressBarConfig!.getCircleHandlerPaint!(
-                width: width,
-                height: height,
-                playedPart: playedPart,
-                circleHandlerRadius: circleHandlerRadius,
-              )
-            : Paint()
-          ..color = podProgressBarConfig!.circleHandlerColor;
+    final Paint handlePaint = podProgressBarConfig!.getCircleHandlerPaint != null
+        ? podProgressBarConfig!.getCircleHandlerPaint!(
+            width: width,
+            height: height,
+            playedPart: playedPart,
+            circleHandlerRadius: circleHandlerRadius,
+          )
+        : Paint()
+      ..color = podProgressBarConfig!.circleHandlerColor;
 
     canvas.drawCircle(
       Offset(playedPart, height / 2),
